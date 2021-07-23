@@ -3,6 +3,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Home from './Home';
+/*
 import UserInterface from './UserInterface';
 import ExpertInterface from './ExpertInterface';
 import VideoList from './VideoList';
@@ -22,11 +23,15 @@ import ChangeUsername from './ChangeUsername';
 import ResetPassword from './ResetPassword';
 import SetPassword from './SetPassword';
 import CommentMentionPage from './CommentMentionPage';
+*/
 import RateLater from './RateLater';
+/*
 import OnlineUpdateDemo from './OnlineUpdateDemo';
+*/
 
 export default () => (
   <Switch>
+    {/*
     <Route path="/info/">
       <PersonalInfo />
     </Route>
@@ -102,15 +107,18 @@ export default () => (
     <Route path="/comment_mentions">
       <CommentMentionPage />
     </Route>
+    */}
     <Route path="/rate_later">
       <RateLater />
     </Route>
     <Route path="/rate_later_add/:videoIdAdd">
       <RateLater />
     </Route>
+    {/*
     <Route path="/online/:videoIdA/:videoIdB">
       <OnlineUpdateDemo />
     </Route>
+    */}
     <Route path="/">
       <Home />
     </Route>

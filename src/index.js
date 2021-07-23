@@ -6,6 +6,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './components/App';
 
+window.is_authenticated = 1;
+
 const theme = createMuiTheme({
   palette: {
     primary: {

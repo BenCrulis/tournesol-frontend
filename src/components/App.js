@@ -39,7 +39,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
-// import Router from './Router';
+import Router from './Router';
 
 const drawerWidth = 240;
 
@@ -461,7 +461,7 @@ const App = () => {
       </Drawer>
 
       <main className={classes.content}>
-        Hello World
+        <Router />
       </main>
     </div>
   );

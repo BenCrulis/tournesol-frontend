@@ -6,7 +6,7 @@ import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import YouTube from 'react-youtube';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import { useHistory, Link } from 'react-router-dom';
 import { TournesolAPI } from '../api';
@@ -97,7 +97,8 @@ export default () => {
 
   // obtaining number of ratings
   if (numRatings === null) {
-    setNumRatings(undefined);
+    // TODO: Implement ExpertRatingsApi
+    /*
     const api = new TournesolAPI.ExpertRatingsApi();
     api.expertRatingsList({ limit: 1 }, (err, dataNum) => {
       if (!err) {
@@ -106,6 +107,7 @@ export default () => {
         setNumRatings(0);
       }
     });
+    */
   }
 
   if (numRatedLater === null) {
@@ -121,12 +123,14 @@ export default () => {
   }
 
   if (loading) {
-    /// request statistics from the server
-    const api = new TournesolAPI.StatisticsApi();
+    // TODO: Implement StatisticsApi
+    setLoading(false)
+
+    /*const api = new TournesolAPI.StatisticsApi();
     api.view((_err, statsData) => {
       setData(statsData);
       setLoading(false);
-    });
+    });*/
   }
 
   // get one statistic from data or "..." if loading
@@ -234,7 +238,7 @@ export default () => {
                   href="/login/google-oauth2/"
                 >
                   Log in with&nbsp;
-                  <FontAwesomeIcon icon={['fab', 'google']} />
+                  <FontAwesomeIcon icon={fabGoogle} />
                 </Button>{' '}
                 <Button
                   variant="contained"

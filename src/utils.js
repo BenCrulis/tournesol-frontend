@@ -1,5 +1,4 @@
 import React from 'react';
-import YouTube from 'react-youtube';
 import ReactPlayer from 'react-player/youtube';
 import { youtubeVideoIdRegexSymbol } from './constants';
 
@@ -64,3 +63,4 @@ export const YoutubePlayer = ({ videoId, width = 250, height = 142 }) => {
     height={height}
   />;
 };
+

@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import Card from '@material-ui/core/Card';
-import Chart from 'react-google-charts';
+//import Chart from 'react-google-charts';
 import CommentIcon from '@material-ui/icons/Comment';
 import FunctionsIcon from '@material-ui/icons/Functions';
 import SearchIcon from '@material-ui/icons/Search';
@@ -124,7 +124,7 @@ const VideoEmbed = ({ video, showPlayer, setShowPlayer, light = true }) => {
 
   return (
     <div className={classes.videoContainer}>
-      {showPlayer && (
+     {showPlayer && (
         <YoutubePlayer
           videoId={video.video_id}
           light={light}
@@ -214,7 +214,8 @@ const InfoChart = ({ showChart, setShowChart, video, showMyScore, myInfo }) => {
   return (
     <div className={classes.chartContainer}>
       {showChart ? (
-        chartReady && (
+        <div style="width: 100%; height: 100%">Chart disabled</div>
+        /*chartReady && (
           <Chart
             width="100%"
             height="100%"
@@ -245,7 +246,7 @@ const InfoChart = ({ showChart, setShowChart, video, showMyScore, myInfo }) => {
               },
             }}
           />
-        )
+        )*/
       ) : (
         <Button
           variant="contained"

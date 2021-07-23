@@ -10,7 +10,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
-import { TournesolAPI, formatError } from '../api';
+//import { TournesolAPI, formatError } from '../api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +34,9 @@ export default () => {
   const classes = useStyles();
 
   const handleSubmit = () => {
+    // TODO: implement UserInformationApi
+    console.warning("UserInformationApi is not implemented")
+    /*
     const api = new TournesolAPI.UserInformationApi();
     api.userInformationAddVerifyEmailPartialUpdate(state.email, window.user_information_id,
       (err, _res) => {
@@ -44,7 +47,7 @@ export default () => {
           setSubmissionError(null);
           setSubmissionResult('Your e-mail was added, please check your inbox! Note that the certification email might have ended up in your spam mailbox');
         }
-      });
+      });*/
     setSubmitted(true);
   };
 

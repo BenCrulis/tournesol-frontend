@@ -7,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CommentIcon from '@material-ui/icons/Comment';
 import PublicIcon from '@material-ui/icons/Public';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -16,7 +17,7 @@ import Fade from '@material-ui/core/Fade';
 import { withStyles } from '@material-ui/core/styles';
 import { TutorialTooltip } from './TutorialTooltips';
 import { getVideoIdFromURL, YoutubePlayer } from '../../utils';
-import { TournesolAPI } from '../../api';
+//import { TournesolAPI } from '../../api';
 
 const StyledMenu = withStyles({
   paper: {
@@ -64,11 +65,14 @@ const PrivacyStatusSelector = ({ id, onPrivacyInfo = null }) => {
   };
 
   const setPublic = (status) => {
+    // TODO: Implement VideosApi
+    /*
     const api = new TournesolAPI.VideosApi();
     setPrivacyStatus('REQUESTED');
     api.setRatingPrivacy(status, id, () => {
       setPrivacyStatus('INIT');
     });
+    */
   };
 
   const handleMenuItemClick = (event, status) => {
@@ -86,6 +90,9 @@ const PrivacyStatusSelector = ({ id, onPrivacyInfo = null }) => {
   if (privacyStatus === 'INIT') {
     setPrivacyStatus('REQUESTED');
     setPrivacyStatusVideo(id);
+
+    // TODO: Implement VideosApi
+    /*
     const api = new TournesolAPI.VideosApi();
     api.myRatingsArePrivate(id, (err, data) => {
       if (!err) {
@@ -98,6 +105,7 @@ const PrivacyStatusSelector = ({ id, onPrivacyInfo = null }) => {
       }
       setPrivacyStatusVideo(id);
     });
+    */
   }
 
   if (privacyStatusVideo !== id && privacyStatus !== 'REQUESTED') {
@@ -107,7 +115,7 @@ const PrivacyStatusSelector = ({ id, onPrivacyInfo = null }) => {
   // note the STRING indices
   const nameByPrivacy = { true: 'Only me', false: 'Everyone' };
   const iconByPrivacy = {
-    true: <FontAwesomeIcon icon={['fa', 'user-secret']} />,
+    true: <FontAwesomeIcon icon={faUserSecret} />,
     false: <PublicIcon />,
   };
 

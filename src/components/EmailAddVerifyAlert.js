@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
-import { TournesolAPI } from '../api';
+//import { TournesolAPI } from '../api';
 import EmailAddVerify from './EmailAddVerify';
 
 const useStyles = makeStyles(() => ({
@@ -21,13 +21,15 @@ export default () => {
 
   if (!userInfoRequested) {
     setUserInfoRequested(true);
+    //TODO: Implement UserInformationAPI
+    /*
     const api = new TournesolAPI.UserInformationApi();
     api.userInformationRetrieve(window.user_information_id, (err, res) => {
       if (!err) {
         setDomainRejected(res.is_domain_rejected);
         setIsCertified(res.is_certified);
       }
-    });
+    });*/
   }
   return (
     <>

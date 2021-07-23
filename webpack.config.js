@@ -9,6 +9,7 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist/index.html',
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({title: 'Tournesol',}),
