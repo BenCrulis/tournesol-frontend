@@ -7,12 +7,15 @@ import ComparisonsPage from './pages/comparisons/Comparisons';
 import DonatePage from './pages/donate/Donate';
 import RateLaterPage from './pages/rateLater/RateLater';
 import Frame from './features/frame/Frame';
+import ComparisonPage from './pages/comparison/Comparison';
+import { Switch, Route } from 'react-router-dom';
 import { PrivateRoute } from './features/login/PrivateRoute';
 import VideoCardPage from './pages/videos/VideoCard';
 
 function App() {
   return (
     <div className="App">
+<<<<<<< HEAD
       <Frame>
         <Switch>
           <Route path="/video/:video_id">
@@ -24,6 +27,9 @@ function App() {
           <PrivateRoute path="/comparisons">
             <ComparisonsPage />
           </PrivateRoute>
+        <PrivateRoute path="/comparison">
+          <ComparisonPage />
+        </PrivateRoute>
           <PrivateRoute path="/rate_later">
             <RateLaterPage />
           </PrivateRoute>
@@ -38,6 +44,16 @@ function App() {
           </Route>
         </Switch>
       </Frame>
+=======
+      <Switch>
+        <Route path="/login">
+          <LoginPage />
+        </Route>
+        <Route path="/">
+          <HomePage />
+        </Route>
+      </Switch>
+>>>>>>> 04be59e (WIP)
     </div>
   );
 }
