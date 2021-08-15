@@ -1,5 +1,7 @@
 import React from 'react';
+import ReactPlayer from 'react-player/youtube';
 
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ReplayIcon from '@material-ui/icons/Replay';
 import TextField from '@material-ui/core/TextField';
@@ -13,23 +15,43 @@ import Menu from '@material-ui/core/Menu';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Fade from '@material-ui/core/Fade';
-import { withStyles } from '@material-ui/core/styles';
 
 import { getVideoIdFromURL, VideoPlayer } from './utils';
 
+const useStyles = makeStyles(() => ({
+  root: {
+    margin: 4,
+  },
+  playerWrapper: {
+    position: 'relative',
+    paddingTop: '56.25%' /* 720 / 1280 = 0.5625 */,
+  },
+  reactPlayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  controls: {
+    marginTop: '12px',
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+}));
+
 export default ({
-  id,
+  videoId,
   setId,
-  getNewId,
   showPlayer = true,
   showControls = true,
 }: {
-  id: string;
+  videoId: string;
   setId: Function;
   getNewId: Function;
   showPlayer: boolean;
   showControls: boolean;
 }) => {
+  const classes = useStyles();
+
   const handleChange = (e: any) => {
     console.log('handleChange');
     // TODO implement
@@ -39,42 +61,40 @@ export default ({
     // else setId(target?.value.replace(/[^A-Za-z0-9-_]/g, '').substring(0, 20));
   };
 
+  const loadNewVideo = (e: any) => {
+    console.log('loadNewVideo');
+    // TODO implement
+  };
+
   return (
-    <div>
+    <div className={classes.root}>
       {showPlayer && (
-        <div
-          style={{
-            height: '238px',
-            width: '420px',
-            background: '#000',
-          }}
-        >
-          <VideoPlayer videoId={id} width={420} height={240} />
-        </div>
-      )}
-      {showControls && (
-        <div style={{ marginTop: '12px' }}>
-          <TextField
-            label="Video Id"
-            variant="outlined"
-            className="video_id_text_field"
-            placeholder="Paste URL or Video ID"
-            style={{ width: '13em' }}
-            value={id}
-            onChange={handleChange}
+        <div className={classes.playerWrapper}>
+          <ReactPlayer
+            url={`https://youtube.com/watch?v=${videoId}`}
+            controls
+            light
+            width="100%"
+            height="100%"
+            className={classes.reactPlayer}
           />
-          <Tooltip title="New Video" aria-label="add">
-            <IconButton
-              className="new_video_button"
-              aria-label="load"
-              onClick={() => getNewId()}
-            >
-              <ReplayIcon />
-            </IconButton>
-          </Tooltip>
-          {/* <PrivacyStatusSelector id={id} /> */}
         </div>
       )}
+      <div className={classes.controls}>
+        <TextField
+          label="Video Id"
+          placeholder="Paste URL or Video ID"
+          style={{ flex: 1, minWidth: '10em' }}
+          value={videoId}
+          onChange={handleChange}
+        />
+        <Tooltip title="New Video" aria-label="new_video">
+          <IconButton aria-label="new_video" onClick={loadNewVideo}>
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
+        {/* TODO: re-enable privacy options <PrivacyStatusSelector id={id} /> */}
+      </div>
     </div>
   );
 };

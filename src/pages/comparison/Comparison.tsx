@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 import Comparison from '../../features/comparison/Comparison';
 import Frame from '../../features/frame/Frame';
@@ -9,14 +10,17 @@ import VideoSelector from '../../features/video_selector/VideoSelector';
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    height: '100%',
   },
   centered: {
-    paddingBottom: '32px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  content: {
+    // marginLeft: 64,
+    paddingBottom: 32,
+    paddingTop: 32,
     width: '880px',
-    flex: '0 0 auto',
     maxWidth: '100%',
   },
   videoContainer: {
@@ -48,12 +52,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  clock: {
-    display: 'flex',
-    alignItems: 'center',
-    float: 'right',
-    color: 'gray',
-  },
   alertTop: {
     marginBottom: '15px',
   },
@@ -61,33 +59,27 @@ const useStyles = makeStyles(() => ({
 
 const ComparisonsPage = () => {
   const classes = useStyles();
-  const [videoA, setVideoA] = useState('A');
-  const [videoB, setVideoB] = useState('B');
+  const [videoA, setVideoA] = useState('Ok5sKLXqynQ');
+  const [videoB, setVideoB] = useState('Ok5sKLXqynQ');
 
   return (
-    <div className="ComparisonsPage">
+    <div className={classes.root}>
       <Frame />
-      <div className={classes.videoContainer}>
-        <div id="video-left">
-          <VideoSelector
-            showPlayer
-            showControls
-            id={videoA}
-            setId={setVideoA}
-            getNewId={() => {}}
-          />
-        </div>
-        <div id="video-right">
-          <VideoSelector
-            showPlayer
-            showControls
-            id={videoB}
-            setId={setVideoB}
-            getNewId={() => {}}
-          />
-        </div>
+      <div className={classes.centered}>
+        <Grid container className={classes.content}>
+          <Grid item xs={6}>
+            <VideoSelector videoId={videoA} setId={setVideoA} />
+          </Grid>
+          <Grid item xs={6}>
+            <VideoSelector videoId={videoB} setId={setVideoB} />
+          </Grid>
+          <Grid item xs={12}>
+            <Comparison videoA={videoA} videoB={videoB} />
+          </Grid>
+        </Grid>
       </div>
-      <Comparison videoA={videoA} videoB={videoB} />
+      {/* TODO add a link to a page explaning submitting comparison and the multiple criterias */}
+      <a href="https://wiki.tournesol.app/">Help</a>
     </div>
   );
 };

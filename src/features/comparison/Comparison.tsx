@@ -50,12 +50,6 @@ const useStyles = makeStyles(() => ({
     flex: '0 0 auto',
     maxWidth: '100%',
   },
-  videoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: '16px',
-  },
   featuresContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -64,7 +58,7 @@ const useStyles = makeStyles(() => ({
   sliderContainer: {
     display: 'flex',
     flexDirection: 'row',
-    width: '620px',
+    width: 'calc(100% - 64px)',
     alignItems: 'center',
     margin: '-2px',
   },
@@ -78,12 +72,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  clock: {
-    display: 'flex',
-    alignItems: 'center',
-    float: 'right',
-    color: 'gray',
   },
   alertTop: {
     marginBottom: '15px',
@@ -117,12 +105,12 @@ const ComparisonComponent = ({
   const [error, setError] = useState('');
 
   const updateOrCreateComparison = () => {
-    // TODO
+    // TODO implement
     console.log('updateOrCreateComparison');
   };
 
   const submitComparison = () => {
-    // TODO
+    // TODO implement
     console.log('submitComparison');
   };
 
@@ -131,7 +119,7 @@ const ComparisonComponent = ({
   }
 
   return (
-    <div className={classes.root} id="id_expert_rating_page">
+    <div className={classes.root}>
       <div className={classes.centered}>
         {Object.entries(featureNames).map(([feature, feature_name]) => (
           <div
@@ -249,8 +237,6 @@ const ComparisonComponent = ({
             Submit
           </Button>
         </div>
-        {/* TODO add a link to a page explaning submitting comparison and the multiple criterias */}
-        <a href="https://wiki.tournesol.app/">Help</a>
       </div>
     </div>
   );
