@@ -12,7 +12,6 @@ interface Props {
 
 export const PrivateRoute = ({ children, ...rest }: Props) => {
   const login = useAppSelector(selectLogin);
-  const a = 5;
   return (
     <Route
       {...rest}

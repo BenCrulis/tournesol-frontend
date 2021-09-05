@@ -1,4 +1,4 @@
-import { ComparisonService } from '../../services/openapi';
+import { UsersService } from '../../services/openapi';
 import type { Comparison } from '../../services/openapi/models/Comparison';
 import { OpenAPI } from '../../services/openapi/core/OpenAPI';
 
@@ -7,7 +7,7 @@ const api_url = process.env.REACT_APP_API_URL;
 export const fetchComparisons = (access_token: string) => {
   OpenAPI.TOKEN = access_token;
   OpenAPI.BASE = api_url ?? '';
-  return ComparisonService.comparisonList();
+  return UsersService.usersMeComparisonsList();
 };
 
 export const createComparison = (
@@ -16,7 +16,7 @@ export const createComparison = (
 ) => {
   OpenAPI.TOKEN = access_token;
   OpenAPI.BASE = api_url ?? '';
-  return ComparisonService.comparisonCreate(comparison);
+  return UsersService.usersMeComparisonsCreate(comparison);
 };
 
 // export const fetchComparisons = async (access_token: string) => {

@@ -8,7 +8,6 @@ import DonatePage from './pages/donate/Donate';
 import RateLaterPage from './pages/rateLater/RateLater';
 import Frame from './features/frame/Frame';
 import ComparisonPage from './pages/comparison/Comparison';
-import { Switch, Route } from 'react-router-dom';
 import { PrivateRoute } from './features/login/PrivateRoute';
 import VideoCardPage from './pages/videos/VideoCard';
 

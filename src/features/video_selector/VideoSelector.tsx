@@ -38,17 +38,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default ({
+const VideoSelector = ({
   videoId,
   setId,
-  showPlayer = true,
-  showControls = true,
 }: {
   videoId: string;
-  setId: Function;
-  getNewId: Function;
-  showPlayer: boolean;
-  showControls: boolean;
+  setId: (pk: string) => void;
 }) => {
   const classes = useStyles();
 
@@ -68,18 +63,16 @@ export default ({
 
   return (
     <div className={classes.root}>
-      {showPlayer && (
-        <div className={classes.playerWrapper}>
-          <ReactPlayer
-            url={`https://youtube.com/watch?v=${videoId}`}
-            controls
-            light
-            width="100%"
-            height="100%"
-            className={classes.reactPlayer}
-          />
-        </div>
-      )}
+      <div className={classes.playerWrapper}>
+        <ReactPlayer
+          url={`https://youtube.com/watch?v=${videoId}`}
+          controls
+          light
+          width="100%"
+          height="100%"
+          className={classes.reactPlayer}
+        />
+      </div>
       <div className={classes.controls}>
         <TextField
           label="Video Id"
@@ -98,3 +91,5 @@ export default ({
     </div>
   );
 };
+
+export default VideoSelector;

@@ -3,7 +3,6 @@ import ReactPlayer from 'react-player/youtube';
 
 // Function found on Stackoverflow. At:
 // https://stackoverflow.com/questions/42202611/how-to-validate-a-youtube-url-using-js
-// eslint-disable-next-line import/prefer-default-export
 export const getVideoIdFromURL = (url: string) => {
   if (typeof url !== 'string') return '';
   const a = document.createElement('A');
