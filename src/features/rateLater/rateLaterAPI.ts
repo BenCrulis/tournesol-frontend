@@ -1,5 +1,5 @@
 import { ensureVideoExistOrCreate } from 'src/utils/video';
-import { UsersService, VideoService } from 'src/services/openapi';
+import { UsersService } from 'src/services/openapi';
 import { OpenAPI } from 'src/services/openapi/core/OpenAPI';
 import { LoginState } from '../login/LoginState.model';
 

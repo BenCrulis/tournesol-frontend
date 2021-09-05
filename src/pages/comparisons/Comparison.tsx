@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import Comparison from '../../features/comparisons/Comparison';
-import Frame from '../../features/frame/Frame';
 import VideoSelector from '../../features/video_selector/VideoSelector';
 
 const useStyles = makeStyles(() => ({
