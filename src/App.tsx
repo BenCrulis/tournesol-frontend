@@ -3,11 +3,11 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from './pages/home/Home';
 import LoginPage from './pages/login/Login';
-import ComparisonsPage from './pages/comparisons/Comparisons';
+import ComparisonListPage from './pages/comparisons/ComparisonList';
 import DonatePage from './pages/donate/Donate';
 import RateLaterPage from './pages/rateLater/RateLater';
 import Frame from './features/frame/Frame';
-import ComparisonPage from './pages/comparison/Comparison';
+import ComparisonPage from './pages/comparisons/Comparison';
 import { PrivateRoute } from './features/login/PrivateRoute';
 import VideoCardPage from './pages/videos/VideoCard';
 
@@ -23,7 +23,7 @@ function App() {
             <LoginPage />
           </Route>
           <PrivateRoute path="/comparisons">
-            <ComparisonsPage />
+            <ComparisonListPage />
           </PrivateRoute>
           <PrivateRoute path="/comparison">
             <ComparisonPage />

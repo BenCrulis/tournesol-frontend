@@ -121,56 +121,50 @@ const ComparisonComponent = ({
             className={classes.featuresContainer}
           >
             <div className={classes.featureNameDisplay}>
-              <Grid container spacing={0}>
-                <Grid
-                  item
-                  xs={12}
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  container
-                  style={{ height: '20px' }}
+              <Grid
+                item
+                xs={12}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                container
+                style={{ height: '20px' }}
+              >
+                {/* FEATURE NAME */}
+                <Tooltip
+                  title="Click to check our definition"
+                  aria-label="feature explanation"
+                  interactive
+                  style={{ marginLeft: '8px' }}
+                  placement="left"
                 >
-                  <div>
-                    {/* FEATURE NAME */}
-                    <Tooltip
-                      title="Click to check our definition"
-                      aria-label="feature explanation"
-                      interactive
-                      style={{ marginLeft: '8px' }}
-                      placement="left"
+                  <Typography>
+                    <a
+                      // TODO add correct link
+                      href="https://wiki.tournesol.app"
+                      id={`id_explanation_${feature}`}
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      <Typography>
-                        <a
-                          // TODO add correct link
-                          href="https://wiki.tournesol.app"
-                          id={`id_explanation_${feature}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {feature_name}
-                        </a>
-                      </Typography>
-                    </Tooltip>
-                  </div>
+                      {feature_name}
+                    </a>
+                  </Typography>
+                </Tooltip>
 
-                  {/* SKIP FEATURE */}
-                  <div>
-                    <Tooltip title="Skip this feature" aria-label="add">
-                      <Checkbox
-                        id={`id_checkbox_skip_${feature}`}
-                        disabled={submitted}
-                        checked={false}
-                        onChange={(e) => {
-                          // TODO
-                          console.log('Checkbox onChange');
-                        }}
-                        name={feature}
-                        color="primary"
-                      />
-                    </Tooltip>
-                  </div>
-                </Grid>
+                {/* SKIP FEATURE */}
+                <Tooltip title="Skip this feature" aria-label="add">
+                  <Checkbox
+                    id={`id_checkbox_skip_${feature}`}
+                    disabled={submitted}
+                    checked={false}
+                    onChange={(e) => {
+                      // TODO
+                      console.log('Checkbox onChange');
+                    }}
+                    name={feature}
+                    color="primary"
+                  />
+                </Tooltip>
               </Grid>
             </div>
             <div className={classes.sliderContainer}>

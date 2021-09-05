@@ -1,10 +1,10 @@
 import React from 'react';
-import Comparisons from '../../features/comparisons/Comparisons';
+import ComparisonList from '../../features/comparisons/ComparisonList';
 
 function ComparisonsPage() {
   return (
     <div className="ComparisonsPage">
-      <Comparisons />
+      <ComparisonList />
     </div>
   );
 }

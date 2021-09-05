@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import Comparison from '../../features/comparison/Comparison';
+import Comparison from '../../features/comparisons/Comparison';
 import Frame from '../../features/frame/Frame';
 import VideoSelector from '../../features/video_selector/VideoSelector';
 
@@ -60,11 +60,10 @@ const useStyles = makeStyles(() => ({
 const ComparisonsPage = () => {
   const classes = useStyles();
   const [videoA, setVideoA] = useState('Ok5sKLXqynQ');
-  const [videoB, setVideoB] = useState('Ok5sKLXqynQ');
+  const [videoB, setVideoB] = useState('cebFWOlx848');
 
   return (
     <div className={classes.root}>
-      <Frame />
       <div className={classes.centered}>
         <Grid container className={classes.content}>
           <Grid item xs={6}>
