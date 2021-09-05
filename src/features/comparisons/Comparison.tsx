@@ -51,9 +51,9 @@ const useStyles = makeStyles(() => ({
   sliderContainer: {
     display: 'flex',
     flexDirection: 'row',
-    width: 'calc(100% - 64px)',
+    maxWidth: 660,
+    width: '100%',
     alignItems: 'center',
-    margin: '-2px',
   },
   slider: {
     flex: '1 1 0px',
