@@ -10,24 +10,48 @@ export const getRecommendedVideos = (
 ) => {
   const dayInMillisecondes = 1000 * 60 * 60 * 24;
   const conversionTime = new Map();
+  const params = new URLSearchParams(searchString);
   conversionTime.set('Any', 1);
   conversionTime.set('Today', dayInMillisecondes);
   conversionTime.set('Week', dayInMillisecondes * 7);
-  conversionTime.set('Month', dayInMillisecondes * 7 * 31);
+  conversionTime.set('Month', dayInMillisecondes * 31);
   conversionTime.set('Year', dayInMillisecondes * 365);
- /*
-  const dateConversion = () => {
-    const dateNow = Date.now();
+  const dateNow = Date.now();
+
+  if (params.get('date')) {
+    const date = params.get('date');
+    console.log(date);
+    params.delete('date');
     if (date != 'Any') {
       const limitPublicationDateMilliseconds =
-        dateNow - conversionTime.get(date);
-      return new Date(limitPublicationDateMilliseconds).toString();
-    } else {
-      return '';
+        dateNow - conversionTime.get(date) + dayInMillisecondes * 31; // issue with a gap of one month
+      const param_date = new Date(limitPublicationDateMilliseconds);
+      params.append(
+        'date_gte',
+        addZero(param_date.getDate().toString()) +
+          '-' +
+          addZero(param_date.getMonth().toString()) +
+          '-' +
+          param_date.getFullYear().toString().slice(2) +
+          '-' +
+          addZero(param_date.getHours().toString()) +
+          '-' +
+          addZero(param_date.getMinutes().toString()) +
+          '-' +
+          addZero(param_date.getSeconds().toString())
+      );
     }
-  };
-  */
-  fetch(`${api_url}/video/`.concat(searchString), {
+  }
+
+  function addZero(str: string) {
+    if (str.length == 1) {
+      return '0'.concat(str);
+    } else {
+      return str;
+    }
+  }
+  searchString = params.toString();
+  fetch(`${api_url}/video/?`.concat(searchString), {
     // /?language=` + language + '&date=' + date if you wan to add parameters
     method: 'GET',
     mode: 'cors',
