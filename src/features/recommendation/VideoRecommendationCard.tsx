@@ -4,19 +4,10 @@ import type { PaginatedVideoList } from 'src/services/openapi';
 import VideoList from '../videos/VideoList';
 import SearchFilter from './SearchFilter';
 
-function VideoRecommendationCard(props: {
-  date: string;
-  language: string;
-  videos: PaginatedVideoList;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+function VideoRecommendationCard(props: { videos: PaginatedVideoList }) {
   return (
     <div className="main">
-      <SearchFilter
-        language={props.language}
-        date={props.date}
-        onChange={props.onChange}
-      />
+      <SearchFilter />
       <VideoList videos={props.videos} />
     </div>
   );

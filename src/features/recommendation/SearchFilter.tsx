@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useLocation, useHistory } from 'react-router-dom';
 import {
   FormControlLabel,
   makeStyles,
@@ -29,19 +30,38 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function SearchFilter(props: {
-  date: string;
-  language: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+function SearchFilter() {
+  const history = useHistory();
+  const paramsString = useLocation().search;
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  const [state, setState] = React.useState({
+    date: 'Any',
+    language: '',
+  });
   const dateChoices = ['Any', 'Today', 'Week', 'Month', 'Year'];
   const languageChoices = ['English', 'French'];
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, date: event.target.name });
+    pushNewURL('date', event.target.name);
+  };
+
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, language: event.target.name });
+    pushNewURL('language', event.target.name);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  function pushNewURL(key: string, value: string) {
+    const searchParams = new URLSearchParams(paramsString);
+    searchParams.delete(key);
+    searchParams.append(key, value);
+    history.push('/recommendations/?' + searchParams.toString());
+  }
 
   return (
     <div className="main">
@@ -70,8 +90,8 @@ function SearchFilter(props: {
                 <Checkbox
                   icon={<CheckCircleOutline />}
                   checkedIcon={<CheckCircle />}
-                  checked={props.date == label}
-                  onChange={props.onChange}
+                  checked={state.date == label}
+                  onChange={handleDateChange}
                   name={label}
                 />
               }
@@ -90,8 +110,8 @@ function SearchFilter(props: {
                 <Checkbox
                   icon={<CheckCircleOutline />}
                   checkedIcon={<CheckCircle />}
-                  checked={props.language == label}
-                  onChange={props.onChange}
+                  checked={state.language == label}
+                  onChange={handleLanguageChange}
                   name={label}
                 />
               }

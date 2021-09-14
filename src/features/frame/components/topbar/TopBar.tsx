@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -95,13 +95,17 @@ const Logo = () => {
 const Search = () => {
   const classes = useStyles();
   const history = useHistory();
+  const paramsString = useLocation().search;
+  const searchParams = new URLSearchParams(paramsString);
+  searchParams.delete('search');
   const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formElements = form.elements as typeof form.elements & {
       searchInput: HTMLInputElement;
     };
-    history.push('/recommendations/?search=' + formElements.searchInput.value);
+    searchParams.append('search', formElements.searchInput.value);
+    history.push('/recommendations/?' + searchParams.toString());
   };
 
   return (
