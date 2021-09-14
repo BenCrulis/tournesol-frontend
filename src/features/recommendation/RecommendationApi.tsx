@@ -48,6 +48,8 @@ export const getRecommendedVideos = (
     }
   }
   searchString = params.toString();
+
+  // TODO once backend is fixed, use automatically generated code
   fetch(`${api_url}/video/?`.concat(searchString), {
     // /?language=` + language + '&date=' + date if you wan to add parameters
     method: 'GET',
