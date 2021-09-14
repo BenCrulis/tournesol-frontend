@@ -47,6 +47,8 @@ export const getRecommendedVideos = (
       return str;
     }
   }
+
+  params.append('limit', '20');
   searchString = params.toString();
 
   // TODO once backend is fixed, use automatically generated code

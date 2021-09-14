@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
-import { PaginatedVideoList } from 'src/services/openapi';
 
 import { CircularProgress } from '@material-ui/core';
+
+import type { PaginatedVideoList } from 'src/services/openapi';
+import VideoList from '../videos/VideoList';
+import SearchFilter from './SearchFilter';
 import { getRecommendedVideos } from './RecommendationApi';
-import VideoRecommendationCard from './VideoRecommendationCard';
 
 function VideoRecommendationFromFilters() {
   const prov: PaginatedVideoList = { count: 0, results: [] };
@@ -16,16 +18,16 @@ function VideoRecommendationFromFilters() {
     setIsLoading(true);
     getRecommendedVideos(searchParams, (videos: PaginatedVideoList) => {
       setVideos(videos);
+      setIsLoading(false);
     });
-    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-  console.log(videos);
 
-  return isLoading ? (
-    <CircularProgress />
-  ) : (
-    <VideoRecommendationCard videos={videos} />
+  return (
+    <div className="main">
+      <SearchFilter />
+      {isLoading ? <CircularProgress /> : <VideoList videos={videos} />}
+    </div>
   );
 }
 export default VideoRecommendationFromFilters;
