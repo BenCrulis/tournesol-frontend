@@ -20,7 +20,6 @@ export const getRecommendedVideos = (
 
   if (params.get('date')) {
     const date = params.get('date');
-    console.log(date);
     params.delete('date');
     if (date != 'Any') {
       const limitPublicationDateMilliseconds =
