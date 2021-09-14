@@ -25,26 +25,23 @@ export const getRecommendedVideos = (
       const limitPublicationDateMilliseconds =
         dateNow - conversionTime.get(date) + dayInMillisecondes * 31; // issue with a gap of one month
       const param_date = new Date(limitPublicationDateMilliseconds);
-      params.append(
-        'date_gte',
-        addZero(param_date.getDate().toString()) +
-          '-' +
-          addZero(param_date.getMonth().toString()) +
-          '-' +
-          param_date.getFullYear().toString().slice(2) +
-          '-' +
-          addZero(param_date.getHours().toString()) +
-          '-' +
-          addZero(param_date.getMinutes().toString()) +
-          '-' +
-          addZero(param_date.getSeconds().toString())
-      );
+      const [d, m, y, H, M, S] = [
+        param_date.getDate().toString(),
+        param_date.getMonth().toString(),
+        param_date.getFullYear().toString(),
+        param_date.getHours().toString(),
+        param_date.getMinutes().toString(),
+        param_date.getSeconds().toString(),
+      ].map((t) => format(t));
+      params.append('date_gte', `${d}-${m}-${y}-${H}-${M}-${S}`);
     }
   }
 
-  function addZero(str: string) {
+  function format(str: string) {
     if (str.length == 1) {
       return '0'.concat(str);
+    } else if (str.length == 4) {
+      return str.slice(2);
     } else {
       return str;
     }

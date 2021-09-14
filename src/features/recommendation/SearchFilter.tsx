@@ -33,22 +33,23 @@ const useStyles = makeStyles(() => ({
 function SearchFilter() {
   const history = useHistory();
   const paramsString = useLocation().search;
+  const searchParams = new URLSearchParams(paramsString);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [state, setState] = React.useState({
-    date: 'Any',
-    language: '',
-  });
   const dateChoices = ['Any', 'Today', 'Week', 'Month', 'Year'];
-  const languageChoices = ['English', 'French'];
+  const languageChoices = {
+    en: 'English',
+    fr: 'French',
+    de: 'German',
+  };
+  const date = searchParams.get('date') || 'Any';
+  const language = searchParams.get('language') || '';
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, date: event.target.name });
     pushNewURL('date', event.target.name);
   };
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, language: event.target.name });
     pushNewURL('language', event.target.name);
   };
 
@@ -90,7 +91,7 @@ function SearchFilter() {
                 <Checkbox
                   icon={<CheckCircleOutline />}
                   checkedIcon={<CheckCircle />}
-                  checked={state.date == label}
+                  checked={date == label}
                   onChange={handleDateChange}
                   name={label}
                 />
@@ -104,21 +105,23 @@ function SearchFilter() {
           <Typography variant="h5" component="h2">
             Language
           </Typography>
-          {languageChoices.map((label) => (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<CheckCircleOutline />}
-                  checkedIcon={<CheckCircle />}
-                  checked={state.language == label}
-                  onChange={handleLanguageChange}
-                  name={label}
-                />
-              }
-              label={label}
-              key={label}
-            />
-          ))}
+          {Object.entries(languageChoices).map(
+            ([language_key, language_value]) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    icon={<CheckCircleOutline />}
+                    checkedIcon={<CheckCircle />}
+                    checked={language == language_key}
+                    onChange={handleLanguageChange}
+                    name={language_key}
+                  />
+                }
+                label={language_value}
+                key={language_key}
+              />
+            )
+          )}
         </div>
       </Collapse>
     </div>

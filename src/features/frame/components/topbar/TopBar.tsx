@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -97,14 +97,12 @@ const Search = () => {
   const history = useHistory();
   const paramsString = useLocation().search;
   const searchParams = new URLSearchParams(paramsString);
-  searchParams.delete('search');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+
   const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const formElements = form.elements as typeof form.elements & {
-      searchInput: HTMLInputElement;
-    };
-    searchParams.append('search', formElements.searchInput.value);
+    searchParams.delete('search');
+    searchParams.append('search', search);
     history.push('/recommendations/?' + searchParams.toString());
   };
 
@@ -115,6 +113,8 @@ const Search = () => {
           type="text"
           className={classes.searchTerm}
           id="searchInput"
+          defaultValue={search}
+          onChange={(e) => setSearch(e.target.value)}
         ></input>
         <button type="submit" className={classes.searchButton}>
           <img src="/svg/Search.svg" alt="search" />
