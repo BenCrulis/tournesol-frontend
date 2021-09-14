@@ -22,8 +22,9 @@ export const getRecommendedVideos = (
     const date = params.get('date');
     params.delete('date');
     if (date != 'Any') {
+      // TODO figure out why the 1 month adding is needed here
       const limitPublicationDateMilliseconds =
-        dateNow - conversionTime.get(date) + dayInMillisecondes * 31; // issue with a gap of one month
+        dateNow - conversionTime.get(date) + dayInMillisecondes * 31;
       const param_date = new Date(limitPublicationDateMilliseconds);
       const [d, m, y, H, M, S] = [
         param_date.getDate().toString(),
