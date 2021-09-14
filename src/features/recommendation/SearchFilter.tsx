@@ -36,7 +36,7 @@ function SearchFilter() {
   const searchParams = new URLSearchParams(paramsString);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const dateChoices = ['Any', 'Today', 'Week', 'Month', 'Year'];
+  const dateChoices = ['Today', 'Week', 'Month', 'Year'];
   const languageChoices = {
     en: 'English',
     fr: 'French',
@@ -59,8 +59,12 @@ function SearchFilter() {
 
   function pushNewURL(key: string, value: string) {
     const searchParams = new URLSearchParams(paramsString);
-    searchParams.delete(key);
-    searchParams.append(key, value);
+    if (searchParams.get(key) === value) {
+      searchParams.delete(key);
+    } else {
+      searchParams.delete(key);
+      searchParams.append(key, value);
+    }
     history.push('/recommendations/?' + searchParams.toString());
   }
 
