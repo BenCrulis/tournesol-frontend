@@ -49,12 +49,16 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 4,
   },
   criteria_img: {
     marginRight: 4,
   },
   other_parameters: {
     padding: 4,
+  },
+  valueText: {
+    margin: 4,
   },
 }));
 
@@ -218,7 +222,7 @@ function SearchFilter() {
                       justifyContent="center"
                       alignItems="center"
                       container
-                      style={{ height: '20px' }}
+                      style={{ height: '30px' }}
                     >
                       <img
                         className={classes.criteria_img}
@@ -230,21 +234,45 @@ function SearchFilter() {
                     </Grid>
                   </div>
                   <div className={classes.sliderContainer}>
-                    <span id={feature_name}></span>
-                    <CustomSlider
-                      name={feature}
-                      defaultValue={parseInt(searchParams.get(feature) || '50')}
-                      step={25}
-                      min={0}
-                      max={100}
-                      valueLabelDisplay="auto"
-                      valueLabelFormat={valuetoText}
-                      onChangeCommitted={(e, value) =>
-                        pushNewURL(feature, value.toString())
-                      }
-                      ValueLabelComponent={ValueLabelComponent}
-                      marks={marks}
-                    />
+                    <Grid
+                      item
+                      xs={6}
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="flex-start"
+                      container
+                    >
+                      <span className={classes.valueText}>
+                        {valuetoText(
+                          parseInt(searchParams.get(feature) || '50')
+                        )}
+                      </span>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="flex-start"
+                      container
+                    >
+                      <CustomSlider
+                        name={feature}
+                        defaultValue={parseInt(
+                          searchParams.get(feature) || '50'
+                        )}
+                        step={25}
+                        min={0}
+                        max={100}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={valuetoText}
+                        onChangeCommitted={(e, value) =>
+                          pushNewURL(feature, value.toString())
+                        }
+                        ValueLabelComponent={ValueLabelComponent}
+                        marks={marks}
+                      />
+                    </Grid>
                   </div>
                 </div>
               ))}
