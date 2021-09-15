@@ -135,11 +135,6 @@ function SearchFilter() {
     pushNewURL('language', event.target.name);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleCriteriaChange = (event: any, newValue: number | number[]) => {
-    console.log(event);
-    console.log(newValue);
-  };
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -234,13 +229,15 @@ function SearchFilter() {
                   <span id={feature_name}></span>
                   <CustomSlider
                     name={feature}
-                    defaultValue={50}
+                    defaultValue={parseInt(searchParams.get(feature) || '50')}
                     step={25}
                     min={0}
                     max={100}
                     valueLabelDisplay="auto"
                     valueLabelFormat={valuetoText}
-                    onChangeCommitted={handleCriteriaChange}
+                    onChangeCommitted={(e, value) =>
+                      pushNewURL(feature, value.toString())
+                    }
                     ValueLabelComponent={ValueLabelComponent}
                     marks={marks}
                   />
