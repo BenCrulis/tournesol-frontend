@@ -8,6 +8,10 @@ import {
   Checkbox,
   Collapse,
   Button,
+  Grid,
+  Slider,
+  Tooltip,
+  withStyles,
 } from '@material-ui/core';
 import {
   CheckCircle,
@@ -29,7 +33,54 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     alignContent: 'space-between',
   },
+  featuresContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  sliderContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: 'calc(100% - 64px)',
+    alignItems: 'center',
+    margin: '-2px',
+  },
+  featureNameDisplay: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  criteria_img: {
+    marginRight: 4,
+  },
 }));
+
+const CustomSlider = withStyles({
+  root: {
+    color: '#3880ff',
+    height: 2,
+    padding: '15px 0',
+  },
+  active: {},
+  track: {
+    height: 2,
+  },
+  rail: {
+    height: 2,
+    opacity: 0.5,
+    backgroundColor: '#bfbfbf',
+  },
+  mark: {
+    backgroundColor: '#bfbfbf',
+    height: 8,
+    width: 1,
+    marginTop: -3,
+  },
+  markActive: {
+    opacity: 1,
+    backgroundColor: 'currentColor',
+  },
+})(Slider);
 
 function SearchFilter() {
   const history = useHistory();
@@ -46,6 +97,36 @@ function SearchFilter() {
   const date = searchParams.get('date') || 'Any';
   const language = searchParams.get('language') || '';
 
+  const marks = [
+    {
+      value: 0,
+    },
+    {
+      value: 25,
+    },
+    {
+      value: 50,
+    },
+    {
+      value: 75,
+    },
+    {
+      value: 100,
+    },
+  ];
+
+  const featureNames = {
+    reliability: 'Reliable & not misleading',
+    pedagogy: 'Clear & pedagogical',
+    importance: 'Important and actionable',
+    layman_friendly: 'Layman-friendly',
+    entertaining_relaxing: 'Entertaining and relaxing',
+    engaging: 'Engaging & thought-provoking',
+    diversity_inclusion: 'Diversity & inclusion',
+    better_habits: 'Encourages better habits',
+    backfire_risk: 'Resilience to backfiring risks',
+  };
+
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     pushNewURL('date', event.target.name);
   };
@@ -54,9 +135,28 @@ function SearchFilter() {
     pushNewURL('language', event.target.name);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleCriteriaChange = (event: any, newValue: number | number[]) => {
+    console.log(event);
+    console.log(newValue);
+  };
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  function valuetoText(value: number) {
+    if (value == 0) {
+      return 'Ignore';
+    } else if (value == 25) {
+      return 'Not important';
+    } else if (value == 50) {
+      return 'Neutral';
+    } else if (value == 75) {
+      return 'Important';
+    } else {
+      return 'Crucial';
+    }
+  }
 
   function pushNewURL(key: string, value: string) {
     const searchParams = new URLSearchParams(paramsString);
@@ -69,68 +169,129 @@ function SearchFilter() {
     history.push('/recommendations/?' + searchParams.toString());
   }
 
+  interface Props {
+    children: React.ReactElement;
+    open: boolean;
+    value: number;
+  }
+
+  function ValueLabelComponent(props: Props) {
+    const { children, open, value } = props;
+    return (
+      <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+        {children}
+      </Tooltip>
+    );
+  }
+
   return (
     <div className="main">
-      <Button
-        color="secondary"
-        size="large"
-        className={classes.filter}
-        startIcon={!expanded ? <ExpandMore /> : <ExpandLess />}
-        aria-expanded={expanded}
-        aria-label="show more"
-        onClick={handleExpandClick}
-      >
-        Filters
-      </Button>
-      <Collapse
-        className={classes.collapse}
-        in={expanded}
-        timeout="auto"
-        unmountOnExit
-      >
-        <div className="data uploaded">
-          <Typography variant="h5" component="h2">
-            Date Uploaded
-          </Typography>
-          {dateChoices.map((label) => (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  icon={<CheckCircleOutline />}
-                  checkedIcon={<CheckCircle />}
-                  checked={date == label}
-                  onChange={handleDateChange}
-                  name={label}
-                />
-              }
-              label={label}
-              key={label}
-            />
-          ))}
-        </div>
-        <div className="language">
-          <Typography variant="h5" component="h2">
-            Language
-          </Typography>
-          {Object.entries(languageChoices).map(
-            ([language_key, language_value]) => (
+      <div className="filters">
+        <Button
+          color="secondary"
+          size="large"
+          className={classes.filter}
+          startIcon={!expanded ? <ExpandMore /> : <ExpandLess />}
+          aria-expanded={expanded}
+          aria-label="show more"
+          onClick={handleExpandClick}
+        >
+          Filters
+        </Button>
+        <Collapse
+          className={classes.collapse}
+          in={expanded}
+          timeout="auto"
+          unmountOnExit
+        >
+          <div className="criteria">
+            {Object.entries(featureNames).map(([feature, feature_name]) => (
+              <div
+                key={feature}
+                id={`id_container_feature_${feature}`}
+                className={classes.featuresContainer}
+              >
+                <div className={classes.featureNameDisplay}>
+                  <Grid
+                    item
+                    xs={12}
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    container
+                    style={{ height: '20px' }}
+                  >
+                    <img
+                      className={classes.criteria_img}
+                      src={`/svg/${feature}.svg`}
+                    />
+                    <Typography>
+                      <span>{feature_name}</span>
+                    </Typography>
+                  </Grid>
+                </div>
+                <div className={classes.sliderContainer}>
+                  <span id={feature_name}></span>
+                  <CustomSlider
+                    name={feature}
+                    defaultValue={50}
+                    step={25}
+                    min={0}
+                    max={100}
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={valuetoText}
+                    onChangeCommitted={handleCriteriaChange}
+                    ValueLabelComponent={ValueLabelComponent}
+                    marks={marks}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="data uploaded">
+            <Typography variant="h5" component="h2">
+              Date Uploaded
+            </Typography>
+            {dateChoices.map((label) => (
               <FormControlLabel
                 control={
                   <Checkbox
                     icon={<CheckCircleOutline />}
                     checkedIcon={<CheckCircle />}
-                    checked={language == language_key}
-                    onChange={handleLanguageChange}
-                    name={language_key}
+                    checked={date == label}
+                    onChange={handleDateChange}
+                    name={label}
                   />
                 }
-                label={language_value}
-                key={language_key}
+                label={label}
+                key={label}
               />
-            )
-          )}
-        </div>
-      </Collapse>
+            ))}
+          </div>
+          <div className="language">
+            <Typography variant="h5" component="h2">
+              Language
+            </Typography>
+            {Object.entries(languageChoices).map(
+              ([language_key, language_value]) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      icon={<CheckCircleOutline />}
+                      checkedIcon={<CheckCircle />}
+                      checked={language == language_key}
+                      onChange={handleLanguageChange}
+                      name={language_key}
+                    />
+                  }
+                  label={language_value}
+                  key={language_key}
+                />
+              )
+            )}
+          </div>
+        </Collapse>
+      </div>
     </div>
   );
 }
