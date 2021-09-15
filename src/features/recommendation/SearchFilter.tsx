@@ -53,6 +53,9 @@ const useStyles = makeStyles(() => ({
   criteria_img: {
     marginRight: 4,
   },
+  other_parameters: {
+    padding: 4,
+  },
 }));
 
 const CustomSlider = withStyles({
@@ -199,93 +202,95 @@ function SearchFilter() {
           timeout="auto"
           unmountOnExit
         >
-          <div className="criteria">
-            {Object.entries(featureNames).map(([feature, feature_name]) => (
-              <div
-                key={feature}
-                id={`id_container_feature_${feature}`}
-                className={classes.featuresContainer}
-              >
-                <div className={classes.featureNameDisplay}>
-                  <Grid
-                    item
-                    xs={12}
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    container
-                    style={{ height: '20px' }}
-                  >
-                    <img
-                      className={classes.criteria_img}
-                      src={`/svg/${feature}.svg`}
+          <div className="parameters">
+            <div className="criteria">
+              {Object.entries(featureNames).map(([feature, feature_name]) => (
+                <div
+                  key={feature}
+                  id={`id_container_feature_${feature}`}
+                  className={classes.featuresContainer}
+                >
+                  <div className={classes.featureNameDisplay}>
+                    <Grid
+                      item
+                      xs={12}
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      container
+                      style={{ height: '20px' }}
+                    >
+                      <img
+                        className={classes.criteria_img}
+                        src={`/svg/${feature}.svg`}
+                      />
+                      <Typography>
+                        <span>{feature_name}</span>
+                      </Typography>
+                    </Grid>
+                  </div>
+                  <div className={classes.sliderContainer}>
+                    <span id={feature_name}></span>
+                    <CustomSlider
+                      name={feature}
+                      defaultValue={parseInt(searchParams.get(feature) || '50')}
+                      step={25}
+                      min={0}
+                      max={100}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={valuetoText}
+                      onChangeCommitted={(e, value) =>
+                        pushNewURL(feature, value.toString())
+                      }
+                      ValueLabelComponent={ValueLabelComponent}
+                      marks={marks}
                     />
-                    <Typography>
-                      <span>{feature_name}</span>
-                    </Typography>
-                  </Grid>
+                  </div>
                 </div>
-                <div className={classes.sliderContainer}>
-                  <span id={feature_name}></span>
-                  <CustomSlider
-                    name={feature}
-                    defaultValue={parseInt(searchParams.get(feature) || '50')}
-                    step={25}
-                    min={0}
-                    max={100}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={valuetoText}
-                    onChangeCommitted={(e, value) =>
-                      pushNewURL(feature, value.toString())
-                    }
-                    ValueLabelComponent={ValueLabelComponent}
-                    marks={marks}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="data uploaded">
-            <Typography variant="h5" component="h2">
-              Date Uploaded
-            </Typography>
-            {dateChoices.map((label) => (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    icon={<CheckCircleOutline />}
-                    checkedIcon={<CheckCircle />}
-                    checked={date == label}
-                    onChange={handleDateChange}
-                    name={label}
-                  />
-                }
-                label={label}
-                key={label}
-              />
-            ))}
-          </div>
-          <div className="language">
-            <Typography variant="h5" component="h2">
-              Language
-            </Typography>
-            {Object.entries(languageChoices).map(
-              ([language_key, language_value]) => (
+              ))}
+            </div>
+            <div className={classes.other_parameters}>
+              <Typography variant="h5" component="h2">
+                Date Uploaded
+              </Typography>
+              {dateChoices.map((label) => (
                 <FormControlLabel
                   control={
                     <Checkbox
                       icon={<CheckCircleOutline />}
                       checkedIcon={<CheckCircle />}
-                      checked={language == language_key}
-                      onChange={handleLanguageChange}
-                      name={language_key}
+                      checked={date == label}
+                      onChange={handleDateChange}
+                      name={label}
                     />
                   }
-                  label={language_value}
-                  key={language_key}
+                  label={label}
+                  key={label}
                 />
-              )
-            )}
+              ))}
+            </div>
+            <div className={classes.other_parameters}>
+              <Typography variant="h5" component="h2">
+                Language
+              </Typography>
+              {Object.entries(languageChoices).map(
+                ([language_key, language_value]) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        icon={<CheckCircleOutline />}
+                        checkedIcon={<CheckCircle />}
+                        checked={language == language_key}
+                        onChange={handleLanguageChange}
+                        name={language_key}
+                      />
+                    }
+                    label={language_value}
+                    key={language_key}
+                  />
+                )
+              )}
+            </div>
           </div>
         </Collapse>
       </div>
