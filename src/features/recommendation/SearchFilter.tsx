@@ -208,6 +208,9 @@ function SearchFilter() {
         >
           <div className="parameters">
             <div className="criteria">
+              <Typography variant="h5" component="h2">
+                Criteria
+              </Typography>
               {Object.entries(featureNames).map(([feature, feature_name]) => (
                 <div
                   key={feature}
