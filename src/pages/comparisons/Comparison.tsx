@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
 import { UsersService, Comparison, OpenAPI } from 'src/services/openapi';
-import { ensureVideoExistOrCreate } from 'src/utils/video';
+import { catchAll_ensureVideoExistOrCreate } from 'src/utils/video';
 import ComparisonSliders from 'src/features/comparisons/Comparison';
 import VideoSelector from 'src/features/video_selector/VideoSelector';
 import { selectLogin } from 'src/features/login/loginSlice';
@@ -72,14 +72,15 @@ const ComparisonsPage = () => {
   const [initialComparison, setInitialComparison] = useState<Comparison | null>(
     null
   );
-  const setVideoA = (x: string) => history.push(`/comparison/${x}/${videoB}`);
+  const setVideoA = (x: string) =>
+    history.push(`/comparison/${x}/${videoB || ''}`);
   const setVideoB = (x: string) => history.push(`/comparison/${videoA}/${x}`);
 
   useEffect(() => {
-    if (videoA) ensureVideoExistOrCreate(videoA);
+    catchAll_ensureVideoExistOrCreate(videoA);
   }, [videoA]);
   useEffect(() => {
-    if (videoB) ensureVideoExistOrCreate(videoB);
+    catchAll_ensureVideoExistOrCreate(videoB);
   }, [videoB]);
   useEffect(() => {
     setIsLoading(true);

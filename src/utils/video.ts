@@ -30,3 +30,12 @@ export async function ensureVideoExistOrCreate(video_id: string) {
     }
   }
 }
+
+// TODO this isn't good
+export async function catchAll_ensureVideoExistOrCreate(video_id: string) {
+  try {
+    await VideoService.videoCreate({ video_id });
+  } catch (err) {
+    console.error(err);
+  }
+}
