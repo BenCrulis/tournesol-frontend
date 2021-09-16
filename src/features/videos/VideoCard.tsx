@@ -178,14 +178,14 @@ function VideoCard({ video }: { video: VideoWithCriteriaScore }) {
             <span className={classes.channel}>{video.uploader}</span>
           )}
         </div>
-        <div className={classes.summary}>
+        {/* <div className={classes.summary}>
           <span>{video.description}</span>
           {/* <img
               className={classes.detailsImage}
               src={'/svg/details.svg'}
               alt="logo"
-            /> */}
-        </div>
+            /> }
+        </div> */}
         <div className={classes.application_details}>
           {max_criteria.length > 0 && (
             <>
