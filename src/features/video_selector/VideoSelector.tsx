@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
   },
   playerWrapper: {
     position: 'relative',
-    paddingTop: '56.25%' /* 720 / 1280 = 0.5625 */,
+    aspectRatio: '16 / 9',
   },
   reactPlayer: {
     position: 'absolute',

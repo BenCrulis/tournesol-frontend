@@ -94,7 +94,7 @@ const SideBar = () => {
             <ListItemIcon>
               <CompareIcon color="action" />
             </ListItemIcon>
-            <ListItemText primary="Comparisons" />
+            <ListItemText primary="My Comparisons" />
           </ListItem>
         </Link>
         <Link to="/comparison">

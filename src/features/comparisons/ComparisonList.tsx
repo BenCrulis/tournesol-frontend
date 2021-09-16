@@ -1,79 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import ReactPlayer from 'react-player/youtube';
+import { Link } from 'react-router-dom';
 
-import {
-  TextField,
-  Grid,
-  Container,
-  makeStyles,
-  Button,
-  Theme,
-} from '@material-ui/core';
+import { Grid, Container, makeStyles, Theme } from '@material-ui/core';
 
-import type { Comparison } from 'src/services/openapi/models/Comparison';
-
-import { fetchComparisons } from './comparisonsAPI';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { getComparisonsAsync, selectComparisons } from './comparisonsSlice';
-import { createComparison } from './comparisonsAPI';
-import { selectLogin } from '../login/loginSlice';
+import type { Comparison } from 'src/services/openapi';
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
-    marginTop: '64px',
+    marginTop: 32,
     padding: theme.spacing(3),
+    maxWidth: 640,
+  },
+  comparisonContainer: {
+    marginBottom: 8,
+  },
+  playerWrapper: {
+    aspectRatio: '16 / 9',
+  },
+  centering: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
 const ComparisonThumbnail = ({ comparison }: { comparison: Comparison }) => {
-  console.log(comparison);
+  const classes = useStyles();
+  const { video_a, video_b } = comparison;
   return (
-    <div>
-      <p>{`${comparison.video_a.video_id}${comparison.video_b.video_id}`}</p>
-    </div>
+    <Grid container className={classes.comparisonContainer}>
+      <Grid item xs={5} className={classes.playerWrapper}>
+        <ReactPlayer
+          url={`https://youtube.com/watch?v=${video_a.video_id}`}
+          light
+          width="100%"
+          height="100%"
+        />
+      </Grid>
+      <Grid item xs={2} className={classes.centering}>
+        <Link to={`/comparison/${video_a.video_id}/${video_b.video_id}`}>
+          <span>VS.</span>
+        </Link>
+      </Grid>
+      <Grid item xs={5} className={classes.playerWrapper}>
+        <ReactPlayer
+          url={`https://youtube.com/watch?v=${video_b.video_id}`}
+          light
+          width="100%"
+          height="100%"
+        />
+      </Grid>
+    </Grid>
   );
 };
 
-const Comparisons = () => {
+const Comparisons = ({
+  comparisons,
+}: {
+  comparisons: Comparison[] | undefined;
+}) => {
   const classes = useStyles();
-  const comparisons = useAppSelector(selectComparisons);
-  const dispatch = useAppDispatch();
-  const token = useAppSelector(selectLogin);
-  const [comparisonList, setComparisonList]: [
-    Comparison[] | undefined,
-    (l: Comparison[] | undefined) => void
-  ] = useState();
 
-  useEffect(() => {
-    if (comparisonList == undefined) {
-      fetchComparisons(token?.access_token ?? '').then((data) => {
-        setComparisonList(data.results);
-      });
-    }
-  }, []); // Runs only once
-
-  const comparison = {
-    criteria_scores: [
-      {
-        criteria: 'reliable',
-        score: 100,
-        weight: 1,
-        comparison: 1,
-      },
-      { criteria: 'pedagogical', score: 100, weight: 1, comparison: 1 },
-    ],
-    video_a: { video_id: 'Ok5sKLXqynQ' },
-    video_b: { video_id: 'cebFWOlx848' },
-    duration_ms: 0,
-    datetime_lastedit: '2021-07-29T19:04:05.582637Z',
-    datetime_add: '2021-07-29T19:04:05.582852Z',
-    user: 1,
-  };
   return (
-    <Container className={classes.content} maxWidth="xs">
-      <Grid container spacing={2}>
+    <Container className={classes.content}>
+      <Grid container>
         <Grid item xs={12}>
-          {comparisonList &&
-            comparisonList.map((c) => (
+          {comparisons &&
+            comparisons.map((c) => (
               <ComparisonThumbnail
                 key={`${c.video_a.video_id}${c.video_b.video_id}`}
                 comparison={c}

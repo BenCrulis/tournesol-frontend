@@ -31,6 +31,12 @@ function App() {
         <PrivateRoute path="/comparison">
           <ComparisonPage />
         </PrivateRoute>
+        <PrivateRoute path="/comparison/:video_a_id">
+          <ComparisonPage />
+        </PrivateRoute>
+        <PrivateRoute path="/comparison/:video_a_id/:video_b_id">
+          <ComparisonPage />
+        </PrivateRoute>
         <PrivateRoute path="/rate_later">
           <RateLaterPage />
         </PrivateRoute>
