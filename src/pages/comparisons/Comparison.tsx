@@ -5,8 +5,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
-import Comparison from '../../features/comparisons/Comparison';
-import VideoSelector from '../../features/video_selector/VideoSelector';
+import { UsersService, Comparison, OpenAPI } from 'src/services/openapi';
+import { ensureVideoExistOrCreate } from 'src/utils/video';
+import ComparisonSliders from 'src/features/comparisons/Comparison';
+import VideoSelector from 'src/features/video_selector/VideoSelector';
+import { selectLogin } from 'src/features/login/loginSlice';
+
+import { useAppSelector } from '../../app/hooks';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,16 +64,54 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ComparisonsPage = () => {
+  const token = useAppSelector(selectLogin);
   const classes = useStyles();
   const { videoA, videoB }: { videoA: string; videoB: string } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
+  const [initialComparison, setInitialComparison] = useState<Comparison | null>(
+    null
+  );
   const setVideoA = (x: string) => history.push(`/comparison/${x}/${videoB}`);
   const setVideoB = (x: string) => history.push(`/comparison/${videoA}/${x}`);
 
   useEffect(() => {
+    if (videoA) ensureVideoExistOrCreate(videoA);
+  }, [videoA]);
+  useEffect(() => {
+    if (videoB) ensureVideoExistOrCreate(videoB);
+  }, [videoB]);
+  useEffect(() => {
     setIsLoading(true);
+    setInitialComparison(null);
+    OpenAPI.TOKEN = token?.access_token ?? '';
+    UsersService.usersMeComparisonsRetrieve(videoA, videoB)
+      .then((comparison) => {
+        console.log(comparison);
+        setInitialComparison(comparison);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setInitialComparison(null);
+        setIsLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoA, videoB]);
+
+  const onSubmitComparison = (c: Comparison) => {
+    if (initialComparison) {
+      const { video_a, video_b, criteria_scores, duration_ms } = c;
+      UsersService.usersMeComparisonsUpdate(
+        video_a.video_id,
+        video_b.video_id,
+        { criteria_scores, duration_ms }
+      );
+    } else {
+      UsersService.usersMeComparisonsCreate(c);
+      setInitialComparison(c);
+    }
+  };
 
   return (
     <div className={`${classes.root} ${classes.centering}`}>
@@ -79,13 +122,18 @@ const ComparisonsPage = () => {
         <Grid item xs={6}>
           {videoA && <VideoSelector videoId={videoB} setId={setVideoB} />}
         </Grid>
-        <Grid item xs={12} className={classes.centering}>
-          {isLoading ? (
-            <CircularProgress style={{ margin: 32 }} />
-          ) : (
-            <Comparison videoA={videoA} videoB={videoB} />
-          )}
-        </Grid>
+        {videoA && videoB && (
+          <Grid item xs={12} className={classes.centering}>
+            {isLoading ? (
+              <CircularProgress style={{ margin: 32 }} />
+            ) : (
+              <ComparisonSliders
+                submit={onSubmitComparison}
+                initialComparison={initialComparison}
+              />
+            )}
+          </Grid>
+        )}
       </Grid>
       {/* TODO add a link to a page explaning submitting comparison and the multiple criterias */}
       <a href="https://wiki.tournesol.app/">Help</a>

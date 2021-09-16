@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -7,28 +8,24 @@ import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import SettingsIcon from '@material-ui/icons/Settings';
 import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
 import Checkbox from '@material-ui/core/Checkbox';
-import Rating from '@material-ui/lab/Rating';
 
-import type { Comparison } from '../../services/openapi';
+import type { Comparison, ComparisonCriteriaScore } from 'src/services/openapi';
 
 // TODO decide on proper way to handle these constants
-const featureNames = {
-  reliable: 'Accurate and reliable',
-  pedagogical: 'Clear and pedagogical',
-  important: 'Important and actionable',
+const criteriaNames = {
+  largely_recommended: 'Should be largely recommended',
+  reliability: 'Reliable & not misleading',
+  pedagogy: 'Clear & pedagogical',
+  importance: 'Important and actionable',
+  layman_friendly: 'Layman-friendly',
+  entertaining_relaxing: 'Entertaining and relaxing',
+  engaging: 'Engaging & thought-provoking',
+  diversity_inclusion: 'Diversity & inclusion',
+  better_habits: 'Encourages better habits',
+  backfire_risk: 'Resilience to backfiring risks',
 };
-const featureList = Object.keys(featureNames);
-
-const defaultComparison = 0;
-const defaultWeidht = 1;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -43,7 +40,7 @@ const useStyles = makeStyles(() => ({
     flex: '0 0 auto',
     maxWidth: '100%',
   },
-  featuresContainer: {
+  criteriasContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -61,7 +58,7 @@ const useStyles = makeStyles(() => ({
   formControl: {
     width: '128px',
   },
-  featureNameDisplay: {
+  criteriaNameDisplay: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -71,56 +68,78 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const isIdValid = (videoId: string) => {
-  const notNull = videoId !== null;
-  const notDots = videoId !== '...';
-  const notUndefined = videoId !== undefined;
-  return notNull && notDots && notUndefined && videoId;
-};
-
 const ComparisonComponent = ({
-  videoA,
-  videoB,
+  submit,
+  initialComparison,
 }: {
-  videoA: string;
-  videoB: string;
+  submit: (c: Comparison) => void;
+  initialComparison: Comparison | null;
 }) => {
   const classes = useStyles();
-
-  const [comparison, setComparison] = useState({
-    video_1: { video_id: videoA },
-    video_2: { video_id: videoB },
-    criteria_scores: [],
-  });
-  const [weights, setWeights] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [error, setError] = useState('');
-
-  const updateOrCreateComparison = () => {
-    // TODO implement
-    console.log('updateOrCreateComparison');
+  const { videoA, videoB }: { videoA: string; videoB: string } = useParams();
+  const castToComparison = (c: Comparison | null): Comparison => {
+    return c
+      ? c
+      : {
+          video_a: { video_id: videoA },
+          video_b: { video_id: videoB },
+          criteria_scores: [],
+        };
   };
+  const [comparison, setComparison] = useState<Comparison>(
+    castToComparison(initialComparison)
+  );
+  const [submitted, setSubmitted] = useState(false);
+
+  type criteriaValuesType = { [s: string]: number | undefined };
+  const criteriaValues: criteriaValuesType = comparison.criteria_scores.reduce(
+    (
+      acc: criteriaValuesType,
+      cs: ComparisonCriteriaScore
+    ): criteriaValuesType => {
+      acc[cs.criteria] = cs.score || 0;
+      return acc;
+    },
+    {}
+  );
+
+  useEffect(
+    () => setComparison(castToComparison(initialComparison)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialComparison]
+  );
 
   const submitComparison = () => {
-    // TODO implement
-    console.log('submitComparison');
+    setSubmitted(true);
+    submit(comparison);
   };
 
-  if (!isIdValid(videoA) || !isIdValid(videoB)) {
-    return <div>Incorrect ids to use component</div>;
-  }
+  const handleSliderChange = (criteria: string, score: number | undefined) => {
+    console.log('slider change', criteria, score);
+    const cs = comparison.criteria_scores.find((c) => c.criteria === criteria);
+    if (score === undefined) {
+      comparison.criteria_scores = comparison.criteria_scores.filter(
+        (c) => c.criteria !== criteria
+      );
+    } else if (cs) {
+      if (cs.score == score) return;
+      cs.score = score;
+    } else {
+      comparison.criteria_scores.push({ criteria, score, weight: 1 });
+    }
+    setComparison({ ...comparison }); // this is only here to refresh the state
+  };
 
   return (
     <div className={classes.root}>
       <div className={classes.centered}>
-        {Object.entries(featureNames).map(([feature, feature_name]) => (
+        {Object.entries(criteriaNames).map(([criteria, criteria_name]) => (
           <div
-            key={feature}
-            id={`id_container_feature_${feature}`}
-            className={classes.featuresContainer}
+            key={criteria}
+            id={`id_container_criteria_${criteria}`}
+            className={classes.criteriasContainer}
           >
-            <div className={classes.featureNameDisplay}>
+            <div className={classes.criteriaNameDisplay}>
               <Grid
                 item
                 xs={12}
@@ -130,10 +149,10 @@ const ComparisonComponent = ({
                 container
                 style={{ height: '20px' }}
               >
-                {/* FEATURE NAME */}
+                {/* criteria NAME */}
                 <Tooltip
                   title="Click to check our definition"
-                  aria-label="feature explanation"
+                  aria-label="criteria explanation"
                   interactive
                   style={{ marginLeft: '8px' }}
                   placement="left"
@@ -142,26 +161,28 @@ const ComparisonComponent = ({
                     <a
                       // TODO add correct link
                       href="https://wiki.tournesol.app"
-                      id={`id_explanation_${feature}`}
+                      id={`id_explanation_${criteria}`}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {feature_name}
+                      {criteria_name}
                     </a>
                   </Typography>
                 </Tooltip>
 
-                {/* SKIP FEATURE */}
-                <Tooltip title="Skip this feature" aria-label="add">
+                {/* SKIP criteria */}
+                <Tooltip title="Vote on this criteria" aria-label="add">
                   <Checkbox
-                    id={`id_checkbox_skip_${feature}`}
+                    id={`id_checkbox_skip_${criteria}`}
                     disabled={submitted}
-                    checked={false}
-                    onChange={(e) => {
-                      // TODO
-                      console.log('Checkbox onChange');
-                    }}
-                    name={feature}
+                    checked={criteriaValues[criteria] !== undefined}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleSliderChange(
+                        criteria,
+                        e.target.checked ? 0 : undefined
+                      )
+                    }
+                    name={criteria}
                     color="primary"
                   />
                 </Tooltip>
@@ -170,9 +191,7 @@ const ComparisonComponent = ({
             <div className={classes.sliderContainer}>
               <IconButton
                 aria-label="left"
-                onClick={() => {
-                  setComparison({ ...comparison, [feature]: 0 });
-                }}
+                onClick={() => handleSliderChange(criteria, -10)}
                 style={{ color: 'black', transform: 'rotate(180deg)' }}
                 disabled={submitted}
               >
@@ -180,24 +199,24 @@ const ComparisonComponent = ({
               </IconButton>
               <Slider
                 // ValueLabelComponent={ValueLabelComponent}
-                id={`slider_expert_${feature}`}
+                id={`slider_expert_${criteria}`}
                 aria-label="custom thumb label"
                 color="secondary"
-                // TODO add correct value
-                value={42}
+                min={-10}
+                step={1}
+                max={10}
+                value={criteriaValues[criteria] || 0}
                 className={classes.slider}
                 track={false}
-                disabled={submitted}
-                onChange={(e, value) => {
-                  // TODO: correctly update comparison
-                  console.log('Slider onChange');
-                }}
+                disabled={submitted || criteriaValues[criteria] === undefined}
+                onChange={(
+                  _: React.ChangeEvent<unknown>,
+                  score: number | number[]
+                ) => handleSliderChange(criteria, score as number)}
               />
               <IconButton
                 aria-label="right"
-                onClick={() => {
-                  setComparison({ ...comparison, [feature]: 100 });
-                }}
+                onClick={() => handleSliderChange(criteria, 10)}
                 style={{ color: 'black' }}
                 disabled={submitted}
               >
@@ -206,7 +225,7 @@ const ComparisonComponent = ({
             </div>
           </div>
         ))}
-        <div className={classes.featuresContainer}>
+        <div className={classes.criteriasContainer}>
           {submitted && (
             <div id="id_submitted_text_info">
               <Typography>
@@ -221,7 +240,7 @@ const ComparisonComponent = ({
             id="expert_submit_btn"
             onClick={submitted ? () => setSubmitted(false) : submitComparison}
           >
-            Submit
+            {submitted ? 'Edit comparison' : 'Submit'}
           </Button>
         </div>
       </div>

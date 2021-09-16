@@ -35,10 +35,12 @@ const VideoSelector = ({
 }) => {
   const classes = useStyles();
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const videoId = getVideoIdFromURL(e.target.value);
-    if (videoId) setId(videoId);
-    else setId(e.target.value.replace(/[^A-Za-z0-9-_]/g, '').substring(0, 20));
+    const _videoId = videoId
+      ? videoId
+      : e.target.value.replace(/[^A-Za-z0-9-_]/g, '').substring(0, 11);
+    setId(_videoId);
   };
 
   // TODO: re-enable easily loading new video for rating
