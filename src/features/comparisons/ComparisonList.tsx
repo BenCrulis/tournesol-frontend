@@ -8,7 +8,6 @@ import type { Comparison } from 'src/services/openapi';
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
-    marginTop: 32,
     padding: theme.spacing(3),
     maxWidth: 640,
   },

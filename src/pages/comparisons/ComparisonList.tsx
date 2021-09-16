@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import type { Comparison } from 'src/services/openapi';
 import { selectLogin } from 'src/features/login/loginSlice';
@@ -13,17 +14,37 @@ function ComparisonsPage() {
     Comparison[] | undefined,
     (l: Comparison[] | undefined) => void
   ] = useState();
+  const [count, setCount] = useState(0);
+  const paramsString = useLocation().search;
+  const searchParams = new URLSearchParams(paramsString);
+  const page = Number(searchParams.get('page') || 1);
+  const [limit, offset] = [30, 30 * (page - 1)];
 
   useEffect(() => {
-    if (comparisons == undefined) {
-      fetchComparisons(token?.access_token ?? '').then((data) => {
-        setComparisons(data.results);
-      });
-    }
+    fetchComparisons(token?.access_token ?? '', limit, offset).then((data) => {
+      console.log(data);
+      setComparisons(data.results);
+      setCount(data.count || 0);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Runs only once
+  }, [page]);
 
-  return <ComparisonList comparisons={comparisons} />;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        paddingBottom: 32,
+      }}
+    >
+      <span style={{ marginTop: 32 }}>
+        {offset + 1} to {Math.min(count, offset + limit)} of {count}
+      </span>
+      {offset + limit < count && <Link to={`?page=${page + 1}`}>next</Link>}
+      <ComparisonList comparisons={comparisons} />
+    </div>
+  );
 }
 
 export default ComparisonsPage;
