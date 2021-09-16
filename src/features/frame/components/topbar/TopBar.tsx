@@ -1,6 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import clsx from 'clsx';
+import React, { useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +12,7 @@ import { Menu } from '@material-ui/icons';
 
 import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
 import { openDrawer, closeDrawer, selectFrame } from '../../drawerOpenSlice';
+import AccountInfo from './AccountInfo';
 
 export const topBarHeight = 80;
 
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
   },
   searchTerm: {
     border: '1px solid #F1EFE7',
@@ -64,41 +65,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     cursor: 'pointer',
     borderRadius: '0px 4px 4px 0px',
-  },
-  AccountInfo: {
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  HeaderButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: '11px 16px',
-    position: 'static',
-    boxSizing: 'border-box',
-    borderRadius: '4px',
-    flex: 'none',
-    order: 1,
-    flexGrow: 0,
-    fontFamily: 'Poppins',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    lineHeight: '18px',
-    height: 36,
-    margin: 1,
-  },
-  JoinUsButton: {
-    border: '2px solid #3198C4',
-    background: '#3198C4',
-    color: '#FFFFFF',
-  },
-  LogInButton: {
-    border: '2px solid #806300',
-    background: '#FFC800',
-    color: '#806300',
   },
 }));
 
@@ -128,32 +94,32 @@ const Logo = () => {
 
 const Search = () => {
   const classes = useStyles();
-  return (
-    <Grid md={4} className={classes.search}>
-      <input type="text" className={classes.searchTerm} id="input_text"></input>
-      <button type="submit" className={classes.searchButton}>
-        <img src="/svg/Search.svg" alt="search" />
-      </button>
-    </Grid>
-  );
-};
+  const history = useHistory();
+  const paramsString = useLocation().search;
+  const searchParams = new URLSearchParams(paramsString);
+  const [search, setSearch] = useState(searchParams.get('search') || '');
 
-const AccountInfo = () => {
-  const classes = useStyles();
+  const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    searchParams.delete('search');
+    searchParams.append('search', search);
+    history.push('/recommendations/?' + searchParams.toString());
+  };
+
   return (
-    <Grid item md={4} xs={8} className={classes.AccountInfo}>
-      <Link
-        className={clsx(classes.LogInButton, classes.HeaderButton)}
-        to="/login"
-      >
-        Log in
-      </Link>
-      <Link
-        className={clsx(classes.JoinUsButton, classes.HeaderButton)}
-        to="/signup"
-      >
-        Join us
-      </Link>
+    <Grid item md={4}>
+      <form onSubmit={onSubmit} className={classes.search}>
+        <input
+          type="text"
+          className={classes.searchTerm}
+          id="searchInput"
+          defaultValue={search}
+          onChange={(e) => setSearch(e.target.value)}
+        ></input>
+        <button type="submit" className={classes.searchButton}>
+          <img src="/svg/Search.svg" alt="search" />
+        </button>
+      </form>
     </Grid>
   );
 };

@@ -10,6 +10,7 @@ import Frame from './features/frame/Frame';
 import ComparisonPage from './pages/comparisons/Comparison';
 import { PrivateRoute } from './features/login/PrivateRoute';
 import VideoCardPage from './pages/videos/VideoCard';
+import VideoRecommendationPage from './pages/videos/VideoRecommendation';
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
       <Switch>
         <Route path="/video/:video_id">
           <VideoCardPage />
+        </Route>
+        <Route path="/recommendations">
+          <VideoRecommendationPage />
         </Route>
         <Route path="/login">
           <LoginPage />
