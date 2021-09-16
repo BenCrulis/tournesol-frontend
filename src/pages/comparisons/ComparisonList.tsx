@@ -22,7 +22,6 @@ function ComparisonsPage() {
 
   useEffect(() => {
     fetchComparisons(token?.access_token ?? '', limit, offset).then((data) => {
-      console.log(data);
       setComparisons(data.results);
       setCount(data.count || 0);
     });
