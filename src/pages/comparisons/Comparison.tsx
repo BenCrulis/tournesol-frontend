@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
 import Comparison from '../../features/comparisons/Comparison';
@@ -11,12 +13,12 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
   },
-  centered: {
+  centering: {
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
   content: {
-    // marginLeft: 64,
     paddingBottom: 32,
     paddingTop: 32,
     width: '880px',
@@ -58,24 +60,33 @@ const useStyles = makeStyles(() => ({
 
 const ComparisonsPage = () => {
   const classes = useStyles();
-  const [videoA, setVideoA] = useState('Ok5sKLXqynQ');
-  const [videoB, setVideoB] = useState('cebFWOlx848');
+  const { videoA, videoB }: { videoA: string; videoB: string } = useParams();
+  const history = useHistory();
+  const [isLoading, setIsLoading] = useState(true);
+  const setVideoA = (x: string) => history.push(`/comparison/${x}/${videoB}`);
+  const setVideoB = (x: string) => history.push(`/comparison/${videoA}/${x}`);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [videoA, videoB]);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.centered}>
-        <Grid container className={classes.content}>
-          <Grid item xs={6}>
-            <VideoSelector videoId={videoA} setId={setVideoA} />
-          </Grid>
-          <Grid item xs={6}>
-            <VideoSelector videoId={videoB} setId={setVideoB} />
-          </Grid>
-          <Grid item xs={12}>
-            <Comparison videoA={videoA} videoB={videoB} />
-          </Grid>
+    <div className={`${classes.root} ${classes.centering}`}>
+      <Grid container className={classes.content}>
+        <Grid item xs={6}>
+          <VideoSelector videoId={videoA} setId={setVideoA} />
         </Grid>
-      </div>
+        <Grid item xs={6}>
+          {videoA && <VideoSelector videoId={videoB} setId={setVideoB} />}
+        </Grid>
+        <Grid item xs={12} className={classes.centering}>
+          {isLoading ? (
+            <CircularProgress style={{ margin: 32 }} />
+          ) : (
+            <Comparison videoA={videoA} videoB={videoB} />
+          )}
+        </Grid>
+      </Grid>
       {/* TODO add a link to a page explaning submitting comparison and the multiple criterias */}
       <a href="https://wiki.tournesol.app/">Help</a>
     </div>

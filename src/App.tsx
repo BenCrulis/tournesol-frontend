@@ -28,13 +28,16 @@ function App() {
         <PrivateRoute path="/comparisons">
           <ComparisonListPage />
         </PrivateRoute>
+        <PrivateRoute path="/comparison/:videoA/:videoB">
+          <ComparisonPage />
+        </PrivateRoute>
+        <PrivateRoute path="/comparison/:videoA">
+          <ComparisonPage />
+        </PrivateRoute>
+        <PrivateRoute path="/comparison//:videoB">
+          <ComparisonPage />
+        </PrivateRoute>
         <PrivateRoute path="/comparison">
-          <ComparisonPage />
-        </PrivateRoute>
-        <PrivateRoute path="/comparison/:video_a_id">
-          <ComparisonPage />
-        </PrivateRoute>
-        <PrivateRoute path="/comparison/:video_a_id/:video_b_id">
           <ComparisonPage />
         </PrivateRoute>
         <PrivateRoute path="/rate_later">
