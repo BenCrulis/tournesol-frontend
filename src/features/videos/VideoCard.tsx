@@ -207,6 +207,7 @@ function VideoCard({ video }: { video: VideoWithCriteriaScore }) {
                   className={classes.logo}
                   src={`/svg/${max_criteria}.svg`}
                   alt={max_criteria}
+                  title={max_criteria}
                 />
               </div>
               <div className={classes.rated}>
@@ -215,6 +216,7 @@ function VideoCard({ video }: { video: VideoWithCriteriaScore }) {
                   className={classes.logo}
                   src={`/svg/${min_criteria}.svg`}
                   alt={min_criteria}
+                  title={min_criteria}
                 />
               </div>
             </>
